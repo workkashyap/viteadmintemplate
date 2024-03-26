@@ -35,7 +35,7 @@
         </DataTable>
 
         <!-- Add Dialogs here -->
-        <Dialog v-model:visible="productDialog" header="Add New User" :modal="true">
+        <Dialog v-model:visible="productDialog" :style="{ width: '450px' }" header="Add New User" :modal="true">
           <div class="field">
             <label for="name">Name</label>
             <InputText id="name" v-model="newUser.name" />

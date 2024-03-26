@@ -16,8 +16,16 @@ const router = createRouter({
              
               
                 
-               
-               
+                {
+                    path: '/uikit/charts',
+                    name: 'charts',
+                    component: () => import('@/views/uikit/Chart.vue')
+                },
+                {
+                    path: '/uikit/misc',
+                    name: 'misc',
+                    component: () => import('@/views/uikit/Misc.vue')
+                },
                 
               
                 

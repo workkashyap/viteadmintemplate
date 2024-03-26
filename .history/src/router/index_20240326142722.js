@@ -14,10 +14,26 @@ const router = createRouter({
                     component: () => import('@/views/Dashboard.vue')
                 },
              
-              
-                
-               
-               
+                {
+                    path: '/uikit/message',
+                    name: 'message',
+                    component: () => import('@/views/uikit/Messages.vue')
+                },
+                {
+                    path: '/uikit/file',
+                    name: 'file',
+                    component: () => import('@/views/uikit/File.vue')
+                },
+                {
+                    path: '/uikit/charts',
+                    name: 'charts',
+                    component: () => import('@/views/uikit/Chart.vue')
+                },
+                {
+                    path: '/uikit/misc',
+                    name: 'misc',
+                    component: () => import('@/views/uikit/Misc.vue')
+                },
                 
               
                 

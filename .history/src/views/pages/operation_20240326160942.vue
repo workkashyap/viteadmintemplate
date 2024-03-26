@@ -6,7 +6,7 @@
           <template v-slot:start>
             <div class="my-2">
               <Button label="New" icon="pi pi-plus" class="mr-2" severity="success" @click="openNew" />
-              <Button label="Delete" icon="pi pi-trash" severity="danger" @click="confirmDeleteSelected" :disabled="!selectedProducts || !selectedProducts.length" />
+              <Button label="Delete" icon="pi pi-trash" severity="danger" @click="confirmDeleteSelected" :disabled="!selectedUser || !selectedUser.id" />
             </div>
           </template>
           <template v-slot:end>
@@ -16,26 +16,25 @@
         </Toolbar>
 
         <DataTable
-          :value="products"
-          v-model:selection="selectedProducts"
+          :value="users"
+          v-model:selection="selectedUser"
           dataKey="id"
           :paginator="true"
           :rows="10"
-          :filters="filters"
-          paginatorTemplate="FirstPageLink PrevPageLink PageLinks NextPageLink LastPageLink CurrentPageReport RowsPerPageDropdown"
-          :rowsPerPageOptions="[5, 10, 25]"
-          currentPageReportTemplate="Showing {first} to {last} of {totalRecords} products"
+          :paginatorTemplate="paginatorTemplate"
+          currentPageReportTemplate="Showing {first} to {last} of {totalRecords} users"
         >
-          <!-- Define DataTable columns here -->
+          <Column selectionMode="single" headerStyle="width: 3rem"></Column>
           <Column field="name" header="Name"></Column>
           <Column field="username" header="Username"></Column>
           <Column field="email" header="Email"></Column>
+          <Column field="address.city" header="City"></Column>
           <Column field="phone" header="Phone"></Column>
           <Column field="website" header="Website"></Column>
         </DataTable>
 
-        <!-- Add Dialogs here -->
-        <Dialog v-model:visible="productDialog" header="Add New User" :modal="true">
+        <!-- Dialog Component for Adding New User -->
+        <Dialog v-model:visible="isAddUserDialogVisible" header="Add New User" :modal="true">
           <div class="field">
             <label for="name">Name</label>
             <InputText id="name" v-model="newUser.name" />
@@ -57,10 +56,11 @@
             <InputText id="website" v-model="newUser.website" />
           </div>
           <template #footer>
-            <Button label="Cancel" icon="pi pi-times" text="" @click="closeDialog" />
+            <Button label="Cancel" icon="pi pi-times" text="" @click="closeAddUserDialog" />
             <Button label="Save" icon="pi pi-check" text="" @click="saveNewUser" />
           </template>
         </Dialog>
+
       </div>
     </div>
   </div>
@@ -73,11 +73,9 @@ import { useToast } from 'primevue/usetoast';
 
 const toast = useToast();
 
-const products = ref([]);
-const productDialog = ref(false);
-const selectedProducts = ref(null);
-const dt = ref(null);
-const filters = ref({});
+const users = ref([]);
+const selectedUser = ref(null);
+const isAddUserDialogVisible = ref(false);
 const newUser = ref({
   name: '',
   username: '',
@@ -88,21 +86,42 @@ const newUser = ref({
 
 const API_URL = 'https://jsonplaceholder.typicode.com/users';
 
-const fetchProducts = async () => {
+const fetchUsers = async () => {
   try {
     const response = await axios.get(API_URL);
-    products.value = response.data;
+    users.value = response.data;
   } catch (error) {
-    console.error('Error fetching products:', error);
+    console.error('Error fetching users:', error);
+  }
+};
+
+const deleteUser = async () => {
+  if (!selectedUser.value) return;
+
+  try {
+    await axios.delete(`${API_URL}/${selectedUser.value.id}`);
+    users.value = users.value.filter(user => user.id !== selectedUser.value.id);
+    selectedUser.value = null;
+    toast.add({ severity: 'success', summary: 'Successful', detail: 'User Deleted', life: 3000 });
+  } catch (error) {
+    console.error('Error deleting user:', error);
   }
 };
 
 const openNew = () => {
-  productDialog.value = true;
+  isAddUserDialogVisible.value = true;
 };
 
-const closeDialog = () => {
-  productDialog.value = false;
+const confirmDeleteSelected = () => {
+  // Implement logic for confirming deletion of selected user (optional)
+};
+
+const exportCSV = () => {
+  // Implement export functionality (optional)
+};
+
+const closeAddUserDialog = () => {
+  isAddUserDialogVisible.value = false;
   // Reset new user data
   newUser.value = {
     name: '',
@@ -116,8 +135,8 @@ const closeDialog = () => {
 const saveNewUser = async () => {
   try {
     const response = await axios.post(API_URL, newUser.value);
-    products.value.push(response.data);
-    closeDialog();
+    users.value.push(response.data);
+    closeAddUserDialog();
     toast.add({ severity: 'success', summary: 'Success', detail: 'New user added successfully', life: 3000 });
   } catch (error) {
     console.error('Error saving new user:', error);
@@ -125,13 +144,6 @@ const saveNewUser = async () => {
   }
 };
 
-const confirmDeleteSelected = () => {
-  // Implement functionality to confirm and delete selected products
-};
-
-const exportCSV = () => {
-  // Implement functionality to export CSV
-};
-
-fetchProducts();
+// Fetch users on component mount
+fetchUsers();
 </script>

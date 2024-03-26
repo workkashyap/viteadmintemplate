@@ -17,7 +17,11 @@ const router = createRouter({
               
                 
                
-               
+                {
+                    path: '/uikit/misc',
+                    name: 'misc',
+                    component: () => import('@/views/uikit/Misc.vue')
+                },
                 
               
                 

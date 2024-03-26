@@ -82,7 +82,7 @@ const model = ref([
             {
                 label: 'Operation',
                 icon: 'pi pi-fw pi-pencil',
-                to: '/pages/operation'
+                to: '/pages/crud'
             },
             {
                 label: 'Timeline',
