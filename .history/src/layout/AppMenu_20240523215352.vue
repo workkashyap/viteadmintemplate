@@ -134,9 +134,9 @@ const model = ref([
                 to: '/pages/operation'
             },
              {
-                label: 'Dart Tool',
+                label: 'App Inventory',
                 icon: 'pi pi-fw pi-pencil',
-                to: '/uikit/Darttool'
+                to: '/pages/operation'
             },
             {
                 label: 'App Health',

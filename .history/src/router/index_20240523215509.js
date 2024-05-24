@@ -54,7 +54,7 @@ const router = createRouter({
                 {
                     path: '/uikit/Darttool',
                     name: 'Darttool',
-                    component: () => import('@/views/uikit/Darttool.vue')
+                    component: () => import('@/views/uikit/Apphealth.vue')
                 },
             ]
         },
